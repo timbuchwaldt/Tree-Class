@@ -1,25 +1,27 @@
 class TreeNode
   #Create getters and Setters
-  attr_accessor :left, :right,:value,:root
+  attr_accessor :left, :right,:value,:root,:data
   #Initialize datastructure with useful defaults
   def initialize options={}
     opts = {
       :left   => nil,
       :right => nil,
       :root   => nil,
-      :value => rand(40)
+      :value => rand(40),
+      :data => "Foo"
     }.merge options
     @left=opts[:left]
     @right=opts[:right]
     @value=opts[:value]
     @root=opts[:root]
+    @data=opts[:data]
   end
   # find a node by its value
   def findsubtree(v)
-    if(v>@value)
+    if(v > @value)
       return right==nil ? nil: right.findsubtree(v)
-    elsif(v<@value)
-      return left==nil ? nil: right.findsubtree(v)
+    elsif(v < @value)
+      return left==nil ? nil: left.findsubtree(v)
     else
       return self
     end
@@ -63,11 +65,14 @@ class TreeNode
       g += @right.gv
       g += "\"#{@value}\" -> \"#{@right.value}\";"
     end
+    if @right.nil? && @left.nil?
+      return "\"#{@value}\""
+    end
     return g
   end
   # Deletion-action
   def delete
-    #are we alone down here? just die and no one cares (except our parents)
+    #are we alone down here? just die an no one cares (except our parents)
     if @left.nil? && @right.nil?
       if @root.left == self
         @root.left = nil
@@ -85,12 +90,35 @@ class TreeNode
       #got left children,so our biggest one will replace us
     else
       max = @left
-      puts max
       while (!max.right.nil?)
         max = max.right
       end
       @value = max.value
       max.delete()
     end
+  end
+  def rotateright
+    p = @root
+    a = @left 
+    d = @right
+    b = a.left
+    c = a.right
+    unless p.nil?
+      if p.left == self
+        p.left = a
+      else
+        p.right = a
+      end
+    end
+    a.right = self
+    a.root = p
+    @left = c
+    @root = a
+    c.root = self unless c.nil?
+  end
+  def to_a arr
+    arr + @left.to_a(arr) unless @left.nil?
+    arr + @right.to_a(arr) unless @right.nil?
+    return arr << @value
   end
 end

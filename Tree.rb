@@ -1,5 +1,11 @@
 class Tree
+  include Enumerable
   attr_accessor :root_node
+  def each &block
+    value_array = []
+    value_array = @root_node.to_a []
+    value_array.each{|member| block.call(member)}
+  end
   def to_s
     return self.root_node
   end
@@ -12,13 +18,16 @@ class Tree
     unless n.nil?
       return n
     else
-      puts "not found #{v}"
       return nil
     end
   end
   def insert(n)
     node = TreeNode.new(:value => n)
-    @root_node.insert(node)
+    if @root_node.nil?
+      @root_node=node
+    else
+      @root_node.insert(node)
+    end
   end
   def delete(key)
     return if @root_node == nil
