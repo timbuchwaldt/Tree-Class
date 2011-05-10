@@ -22,7 +22,7 @@ class Tree
     end
   end
   def insert(n)
-    node = TreeNode.new(:value => n)
+    node = TreeNode.new(:value => n)3
     if @root_node.nil?
       @root_node=node
     else
